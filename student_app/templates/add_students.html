@@ -8,18 +8,65 @@
 
 <h2>Add Students</h2>
 <form method="post">
+
     {% csrf_token %}
-    {{ formset.as_p }}
-    <input type="submit" value="Submit">
+    {{ formset.management_form }}
+
+    {% for form in formset %}
+        {{ form.as_p }}
+        {% if form.instance.is_active %}
+        <script>
+            document.querySelectorAll({{ form }}).forEach(function(element) {
+            element.disabled = true;
+            });
+        </script>
+        {% endif %}
+    {% endfor %}
+
+<!--first selects all elements within the form-->
+<!--then executes the provided function for each element selected previously and-->
+<!--sets the disabled attribute of each selected element to true-->
+
+<!--    {% for form in formset %}-->
+<!--        <div id="disable">-->
+<!--            {{ form.as_table }}-->
+<!--        </div>-->
+<!--        {% if form.instance.is_active %}-->
+<!--        <script>-->
+<!--            var childNodes = document.getElementById("disable").getElementsByTagName('*');-->
+<!--            for (var node of childNodes ) {-->
+<!--                node.disabled = true;-->
+<!--                }-->
+<!--        </script>-->
+<!--        {% endif %}-->
+<!--    {% endfor %}-->
+
+<!--    {% for form in formset %}-->
+<!--        {% if form.instance.is_active %}-->
+<!--            <fieldset disabled>-->
+<!--        {% endif %}-->
+<!--        {{ form.as_table }}-->
+<!--        {% if form.instance.is_active %}-->
+<!--            </fieldset>-->
+<!--        {% endif %}-->
+<!--    {% endfor %}-->
+
+    <input type="submit" value="Save">
 </form>
 
 <h2>Student List</h2>
 <ul>
     {% for student in students %}
-        <li>{{ student.name }}</li>
+    <li>Name - {{ student.name }} | Status - {{ student.is_active }}</li>
     {% endfor %}
 </ul>
 
+<style>
+fieldset {
+    border: 0;
+}
+
+</style>
+
 </body>
 </html>
-
