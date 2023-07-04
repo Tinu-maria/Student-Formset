@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Teacher Form</title>
+</head>
+<body>
+
+<h2>Add Teachers</h2>
+<form method="post">
+
+    {% csrf_token %}
+    {{ formset.management_form }}
+
+    {% for form in formset %}
+        {{ form.as_p }}
+    {% endfor %}
+
+    {% for teacher in teachers %}
+    <p>Student - {{ teacher.students.name }}</p>
+    {% endfor %}
+
+    <input type="submit" value="Save">
+</form>
+
+<style>
+fieldset {
+    border: 0;
+}
+
+</style>
+
+</body>
+</html>

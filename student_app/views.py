@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
-from django.forms import modelformset_factory
-from student_app.models import Student
-from .forms import StudentForm
+from django.forms import modelformset_factory, inlineformset_factory
+from .models import Student, Teacher
+from .forms import StudentForm, TeacherForm
 
 
 # Create your views here.
@@ -25,3 +25,21 @@ def add_students(request):
         formset = StudentFormSet()
 
     return render(request, 'add_students.html', {'formset': formset, 'students': students})
+
+
+def add_teachers(request, student_id):
+    student = Student.objects.get(id=student_id)
+    TeacherFormSet = inlineformset_factory(Student, Teacher, form=TeacherForm, extra=0, can_delete=True)
+    teachers = Teacher.objects.all()
+
+    if request.method == 'POST':
+        formset = TeacherFormSet(request.POST, instance=student)
+
+        if formset.is_valid():
+            formset.save()
+
+    else:
+        formset = TeacherFormSet(instance=student)
+
+    return render(request, 'add_teachers.html', {'formset': formset, 'teachers': teachers})
+
